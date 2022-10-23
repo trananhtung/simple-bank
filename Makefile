@@ -1,13 +1,16 @@
 postgres:
-	docker run --name postgres12 -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=root -d postgres
+	docker run --name bankingdb -p 5432:5432 -e POSTGRES_USER=tungtran -e POSTGRES_PASSWORD=tungtran -d postgres
 createdb:
-	docker exec -it postgres12 createdb --username=root --owner=root simple_bank
+	docker exec -it bankingdb createdb --username=tungtran --owner=tungtran simple_bank
 dropdb:
-	docker exec -it postgres12 dropdb simple_bank
+	docker exec -it bankingdb dropdb simple_bank
 
 migrateup:
-	migrate -path db/migration -database "postgresql://root:root@localhost:5432/simple_bank?sslmode=disable" -verbose up
+	migrate -path db/migration -database "postgresql://tungtran:tungtran@localhost:5432/simple_bank?sslmode=disable" -verbose up
 migratedown:
-	migrate -path db/migration -database "postgresql://root:root@localhost:5432/simple_bank?sslmode=disable" -verbose down
+	migrate -path db/migration -database "postgresql://tungtran:tungtran@localhost:5432/simple_bank?sslmode=disable" -verbose down
 
-.PHONY: postgres createdb dropdb migrateup
+sqlc:
+	sqlc generate
+
+.PHONY: postgres createdb dropdb migrateup sqlc
